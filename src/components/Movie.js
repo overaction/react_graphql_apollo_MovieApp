@@ -1,4 +1,6 @@
-import React from 'react'
+import { useMutation } from '@apollo/client';
+import gql from 'graphql-tag';
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
@@ -24,13 +26,32 @@ const Poster = styled.div`
     background-position: center center;
 `;
 
-const Movie = ({id, bg}) => {
+const Button = styled.button`
+    position: absolute;
+    top: 10px;
+    cursor: pointer;
+    background-color: transparent;
+`
+
+const LIKE_MOVIE = gql`
+    mutation LikeMovie($id: Int!) {
+        likeMovie(id: $id) @client
+    }
+`
+
+const Movie = ({id, bg, isLiked}) => {
+    const [likeMovie] = useMutation(LIKE_MOVIE, {
+        variables: {id: parseInt(id)}
+    });
     return (
+        <>
         <Container>
             <Link to={`/${id}`}>
                 <Poster bg={bg} />
             </Link>
+            <Button onClick={likeMovie}>{isLiked ? "Unlike" : "Like"}</Button>
         </Container>
+        </>
     );
 }
 

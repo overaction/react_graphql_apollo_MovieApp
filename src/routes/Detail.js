@@ -59,11 +59,9 @@ const Poster = styled.div`
 
 const Detail = () => {
     const { id } = useParams();
-    console.log(id);
     const { loading, data } = useQuery(GET_MOVIE, {
         variables: { id: parseInt(id) },
     });
-    console.log(data);
     if(loading) {
         return (
             <Container>
