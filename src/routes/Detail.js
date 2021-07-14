@@ -21,13 +21,14 @@ const Container = styled.div`
     background-image: linear-gradient(-45deg, #d754ab, #fd723a);
     width: 100%;
     display: flex;
-    justify-content: center;
+    justify-content: space-around;
     align-items: center;
     color: white;
 `;
 
 const Column = styled.div`
     margin-left: 10px;
+    width: 50%;
 `;
 
 const Title = styled.h1`
@@ -47,6 +48,9 @@ const Description = styled.p`
 const Poster = styled.div`
     width: 25%;
     height: 60%;
+    background-image: url(${props => props.bg});
+    background-size: cover;
+    background-position: center center;
 `;
 
 const Detail = () => {
@@ -55,19 +59,28 @@ const Detail = () => {
     const { loading, data } = useQuery(GET_MOVIE, {
         variables: { id: parseInt(id) },
     });
-    console.log(loading, data);
-    if (loading) {
-        return "loading...";
+    if(loading) {
+        return (
+            <Container>
+                <Column>
+                    <Title>{loading ? "Loading..." : data.movie.title}</Title>
+                </Column>
+            </Container>
+        );
     }
     if (data && data.movie)
         return (
             <Container>
                 <Column>
-                    <Title>123</Title>
-                    <Subtitle>123123</Subtitle>
-                    <Description>asdasdasd asdasd</Description>
+                    <Title>{loading ? "Loading..." : data.movie.title}</Title>
+                    {!loading && data.movie && (
+                        <>
+                            <Subtitle>{data.movie.language} * {data.movie.rating}</Subtitle>
+                            <Description>{data.movie.description_intro}</Description>
+                        </>
+                    )}
                 </Column>
-                <Poster></Poster>
+                <Poster bg={data.movie ? data.movie.medium_cover_image : ""}></Poster>
             </Container>
         );
 };
